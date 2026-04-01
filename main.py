@@ -84,17 +84,13 @@ async def on_message(message: discord.Message):
         # ── Feature 1: 5 consecutive messages ─────────────────────────────────
         streak_counts[channel_id] += 1
         if streak_counts[channel_id] == STREAK_LIMIT:
-            await message.channel.send(
-                f"{message.author.mention} {random.choice(STREAK_RESPONSES)}"
-            )
+            await message.author.send(random.choice(STREAK_RESPONSES))
             streak_counts[channel_id] = 0
 
         # ── Feature 2: 50 total messages ──────────────────────────────────────
         total_count += 1
         if total_count % TOTAL_LIMIT == 0:
-            await message.channel.send(
-                f"{message.author.mention} {random.choice(TOTAL_RESPONSES)}"
-            )
+            await message.author.send(random.choice(TOTAL_RESPONSES))
 
         # ── Feature 3: 2 messages within 3 seconds ────────────────────────────
         timestamps = rapid_timestamps[channel_id]
@@ -102,18 +98,14 @@ async def on_message(message: discord.Message):
         # Keep only timestamps within the window
         rapid_timestamps[channel_id] = [t for t in timestamps if now - t <= RAPID_WINDOW]
         if len(rapid_timestamps[channel_id]) >= RAPID_LIMIT:
-            await message.channel.send(
-                f"{message.author.mention} {random.choice(RAPID_RESPONSES)}"
-            )
+            await message.author.send(random.choice(RAPID_RESPONSES))
             # Clear so it doesn't spam repeatedly
             rapid_timestamps[channel_id] = []
 
         # ── Feature 4: message over 10 words ──────────────────────────────────
         word_count = len(message.content.split())
         if word_count > LONG_MESSAGE_LIMIT:
-            await message.channel.send(
-                f"{message.author.mention} {random.choice(LONG_MESSAGE_RESPONSES)}"
-            )
+            await message.author.send(random.choice(LONG_MESSAGE_RESPONSES))
 
     else:
         # Someone else spoke — reset the consecutive streak
