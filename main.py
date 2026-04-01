@@ -54,7 +54,7 @@ LONG_MESSAGE_RESPONSES = [
     " HOLY YAP, no one asked, please save it for when the moon turns red"
 ]
 
-LONG_MESSAGE_LIMIT = 10   # word count threshold
+LONG_MESSAGE_LIMIT = 18   # word count threshold
 
 # ── Events ─────────────────────────────────────────────────────────────────────
 @bot.event
