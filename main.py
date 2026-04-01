@@ -20,7 +20,7 @@ TARGET_CHANNEL  = "chess"          # only watch this channel
 
 STREAK_LIMIT = 5          # consecutive messages before streak response
 TOTAL_LIMIT  = 50         # total messages before total response
-RAPID_LIMIT  = 2          # messages within RAPID_WINDOW seconds triggers rapid response
+RAPID_LIMIT  = 3          # messages within RAPID_WINDOW seconds triggers rapid response
 RAPID_WINDOW = 3.0        # seconds
 
 # { channel_id: int } — consecutive message streak
