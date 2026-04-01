@@ -1,5 +1,3 @@
-import ssl
-import certifi
 import discord
 from discord.ext import commands
 from collections import defaultdict
@@ -7,9 +5,6 @@ from dotenv import load_dotenv
 import os
 import random
 import time
-
-# Fix macOS SSL certificate verification error
-ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -20,7 +15,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-TARGET_USERNAME = "abettermaster"  # only watch this user
+TARGET_USERNAME = "lyamkatz"  # only watch this user
 TARGET_CHANNEL  = "chess"          # only watch this channel
 
 STREAK_LIMIT = 5          # consecutive messages before streak response
