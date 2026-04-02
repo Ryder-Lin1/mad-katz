@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import random
 import time
+import datetime
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -55,13 +56,20 @@ LONG_MESSAGE_RESPONSES = [
 ]
 
 LONG_MESSAGE_LIMIT = 18   # word count threshold
+TIMEOUT_SECONDS    = 5    # timeout duration in seconds for word count & streak triggers
+
+# ── Helper ─────────────────────────────────────────────────────────────────────
+async def apply_timeout(member: discord.Member, seconds: int, reason: str):
+    """Times out a member for the given number of seconds."""
+    until = discord.utils.utcnow() + datetime.timedelta(seconds=seconds)
+    await member.timeout(until, reason=reason)
+
 
 # ── Events ─────────────────────────────────────────────────────────────────────
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     print("------")
-
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -85,6 +93,7 @@ async def on_message(message: discord.Message):
         streak_counts[channel_id] += 1
         if streak_counts[channel_id] == STREAK_LIMIT:
             await message.channel.send(f"{message.author.mention} {random.choice(STREAK_RESPONSES)}")
+            await apply_timeout(message.author, TIMEOUT_SECONDS, "5 consecutive messages")
             streak_counts[channel_id] = 0
 
         # ── Feature 2: 50 total messages ──────────────────────────────────────
@@ -102,10 +111,12 @@ async def on_message(message: discord.Message):
             # Clear so it doesn't spam repeatedly
             rapid_timestamps[channel_id] = []
 
-        # ── Feature 4: message over 10 words ──────────────────────────────────
+        # ── Feature 4: message over 18 words ──────────────────────────────────
         word_count = len(message.content.split())
         if word_count > LONG_MESSAGE_LIMIT:
             await message.channel.send(f"{message.author.mention} {random.choice(LONG_MESSAGE_RESPONSES)}")
+            await apply_timeout(message.author, TIMEOUT_SECONDS, "message exceeded word limit")
+            
 
     else:
         # Someone else spoke — reset the consecutive streak
